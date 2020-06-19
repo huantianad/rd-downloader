@@ -4,8 +4,11 @@ import zipfile
 
 import requests
 
+
 # Find levels folder
 levelpath = os.path.join('C:\\', 'Users', os.getlogin(), 'Documents', 'Rhythm Doctor', 'Levels')
+levelpath = "test"
+
 
 # Download list of files from thing
 thing = requests.get(
@@ -13,6 +16,7 @@ thing = requests.get(
 stuff = json.loads(thing.decode('utf-8'))
 
 print("Total number of levels: " + str(len(stuff)) + "\n")
+
 
 # Start and stop for downloading; index starts at 0, start inclusive, end non-inclusive
 start = int(input("Level to start at (index starts at 0): "))
@@ -24,6 +28,7 @@ else:
     print("Looping through " + str(end - start) + " levels.")
 print("\n")
 
+
 # Loop through selected levels
 for level in stuff[start:end]:
     # Get url and file name of level
@@ -33,6 +38,12 @@ for level in stuff[start:end]:
 
     # Download and save zipped level in preZip
     download = requests.get(url)
+
+    # If is google drive link, make level name id
+    if url.startswith('https://drive.google.com/'):
+        name = url.split('id=')[-1]
+
+    # Download and save zipped level in preZip
     with open(f'{name}', 'wb') as f:
         f.write(download.content)
 
@@ -40,5 +51,4 @@ for level in stuff[start:end]:
     with zipfile.ZipFile(f'{name}', 'r') as zip_ref:
         zip_ref.extractall(f'{levelpath}/{name}')
 
-    # Delete unzipped file
     os.remove(f'{name}')
