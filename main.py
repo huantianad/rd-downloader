@@ -7,7 +7,6 @@ import requests
 
 # Find levels folder
 levelpath = os.path.join('C:\\', 'Users', os.getlogin(), 'Documents', 'Rhythm Doctor', 'Levels')
-levelpath = "test"
 
 
 # Download list of files from thing
