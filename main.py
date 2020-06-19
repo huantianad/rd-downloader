@@ -8,7 +8,6 @@ import requests
 # Find levels folder
 levelpath = os.path.join('C:\\', 'Users', os.getlogin(), 'Documents', 'Rhythm Doctor', 'Levels')
 
-
 # Download list of files from thing
 thing = requests.get(
     'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec').content
@@ -30,19 +29,23 @@ print("\n")
 
 # Loop through selected levels
 for level in stuff[start:end]:
-    # Get url and file name of level
+    # Get url of level
     url = level['download_url']
-    name = url.split('/')[-1]
+
+    # Set name of level to id if Drive, else set to discord link name
+    if url.startswith('https://drive.google.com/'):
+        name = url.split('id=')[-1]
+    else:
+        name = url.split('/')[-1]
+
+    # Append (1) to file name if already exists
+    if os.path.exists(f'{levelpath}/{name}'):
+        name = name + "(1)"
+
     print(f"Downloading {name}")
 
     # Download and save zipped level in preZip
     download = requests.get(url)
-
-    # If is google drive link, make level name id
-    if url.startswith('https://drive.google.com/'):
-        name = url.split('id=')[-1]
-
-    # Download and save zipped level in preZip
     with open(f'{name}', 'wb') as f:
         f.write(download.content)
 
@@ -50,4 +53,5 @@ for level in stuff[start:end]:
     with zipfile.ZipFile(f'{name}', 'r') as zip_ref:
         zip_ref.extractall(f'{levelpath}/{name}')
 
+    # Remove unzipped file
     os.remove(f'{name}')
