@@ -20,6 +20,14 @@ if not (samename == "overwrite" or samename == "rename" or samename == "skip"):
     raise ValueError("Invalid argument for OnSameName in config.ini")
 
 
+# Create function to handle renaming.
+def rename(name, index):
+    if os.path.exists(f'{levelpath}/{name} ({index})'):
+        return rename(name, index + 1)
+    else:
+        return f"{name} ({index})"
+
+
 # Download list of files from thing.
 thing = requests.get(
     'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec').content
@@ -52,7 +60,7 @@ for level in stuff[start:end]:
     # Append (1) to file name if already exists.
     if os.path.exists(f'{levelpath}/{name}'):
         if samename == "rename":
-            name = name + "(1)"
+            name = rename(name, 1)
         elif samename == "skip":
             print(f"Skipping {name}")
             break
