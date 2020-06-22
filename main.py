@@ -1,3 +1,4 @@
+import configparser
 import json
 import os
 import zipfile
@@ -5,18 +6,28 @@ import zipfile
 import requests
 
 
-# Find levels folder
-levelpath = os.path.join('C:\\', 'Users', os.getlogin(), 'Documents', 'Rhythm Doctor', 'Levels')
+# Config stuff
+config = configparser.ConfigParser()
+config.read('config.ini')
 
-# Download list of files from thing
+if config.get('MAIN', 'Path'):
+    levelpath = config.get('MAIN', 'Path')
+else:
+    levelpath = os.path.join('C:\\', 'Users', os.getlogin(), 'Documents', 'Rhythm Doctor', 'Levels')
+
+samename = config.get('MAIN', 'OnSameName')
+if not (samename == "overwrite" or samename == "rename" or samename == "skip"):
+    raise ValueError("Invalid argument for OnSameName in config.ini")
+
+
+# Download list of files from thing.
 thing = requests.get(
     'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec').content
 stuff = json.loads(thing.decode('utf-8'))
 
+
+# Prompt user for start and stop of levels to download
 print("Total number of levels: " + str(len(stuff)) + "\n")
-
-
-# Start and stop for downloading; index starts at 0, start inclusive, end non-inclusive
 start = int(input("Level to start at (index starts at 0): "))
 end = int(input("Level to end at (non-inclusive): "))
 
@@ -27,31 +38,35 @@ else:
 print("\n")
 
 
-# Loop through selected levels
+# Loop through selected levels.
 for level in stuff[start:end]:
-    # Get url of level
+    # Get url of level.
     url = level['download_url']
 
-    # Set name of level to id if Drive, else set to discord link name
+    # Set name of level to id if Drive, else set to discord link name.
     if url.startswith('https://drive.google.com/'):
         name = url.split('id=')[-1]
     else:
         name = url.split('/')[-1]
 
-    # Append (1) to file name if already exists
+    # Append (1) to file name if already exists.
     if os.path.exists(f'{levelpath}/{name}'):
-        name = name + "(1)"
+        if samename == "rename":
+            name = name + "(1)"
+        elif samename == "skip":
+            print(f"Skipping {name}")
+            break
 
     print(f"Downloading {name}")
 
-    # Download and save zipped level in preZip
+    # Download and save zipped level in preZip.
     download = requests.get(url)
     with open(f'{name}', 'wb') as f:
         f.write(download.content)
 
-    # Unzip file into level directory
+    # Unzip file into level directory.
     with zipfile.ZipFile(f'{name}', 'r') as zip_ref:
         zip_ref.extractall(f'{levelpath}/{name}')
 
-    # Remove unzipped file
+    # Remove unzipped file.
     os.remove(f'{name}')
