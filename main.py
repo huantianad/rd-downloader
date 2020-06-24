@@ -1,10 +1,9 @@
 import configparser
 import json
 import os
-import zipfile
+from multiprocessing.pool import ThreadPool
 
 import requests
-
 
 # Config stuff
 config = configparser.ConfigParser()
@@ -33,7 +32,6 @@ thing = requests.get(
     'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec').content
 stuff = json.loads(thing.decode('utf-8'))
 
-
 # Prompt user for start and stop of levels to download
 print("Total number of levels: " + str(len(stuff)) + "\n")
 start = int(input("Level to start at (index starts at 0): "))
@@ -46,11 +44,13 @@ else:
 print("\n")
 
 
-# Loop through selected levels.
-for level in stuff[start:end]:
-    # Get url of level.
-    url = level['download_url']
+urls = []
 
+for level in stuff[start:end]:
+    urls.append(level['download_url'])
+
+
+def download(url):
     # Set name of level to id if Drive, else set to discord link name.
     if url.startswith('https://drive.google.com/'):
         name = url.split('id=')[-1]
@@ -63,18 +63,20 @@ for level in stuff[start:end]:
             name = rename(name, 1)
         elif samename == "skip":
             print(f"Skipping {name}")
-            break
+            return
 
     print(f"Downloading {name}")
+    print("\n")
 
     # Download and save zipped level in preZip.
-    download = requests.get(url)
-    with open(f'{name}', 'wb') as f:
-        f.write(download.content)
+    dwn = requests.get(url, stream=True)
+    with open(f'{levelpath}/{name}', 'wb') as f:
+        f.write(dwn.content)
+    return url
 
-    # Unzip file into level directory.
-    with zipfile.ZipFile(f'{name}', 'r') as zip_ref:
-        zip_ref.extractall(f'{levelpath}/{name}')
 
-    # Remove unzipped file.
-    os.remove(f'{name}')
+# The amount of simultaneous downloads. Increasing will increase speed, but will be capped by your network speed.
+threads = 8
+results = ThreadPool(8).imap_unordered(download, urls)
+for r in results:
+    print(r)
