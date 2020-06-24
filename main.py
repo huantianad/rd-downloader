@@ -77,6 +77,6 @@ def download(url):
 
 # The amount of simultaneous downloads. Increasing will increase speed, but will be capped by your network speed.
 threads = 8
-results = ThreadPool(8).imap_unordered(download, urls)
+results = ThreadPool(threads).imap_unordered(download, urls)
 for r in results:
     print(r)
