@@ -4,6 +4,7 @@ import os
 from multiprocessing.pool import ThreadPool
 
 import requests
+from clint.textui import progress
 
 # Config stuff
 config = configparser.ConfigParser()
@@ -32,7 +33,8 @@ def rename(name, index):
     if os.path.exists(f'{levelpath}/{name} ({index})'):
         return rename(name, index + 1)
     else:
-        return f"{name} ({index})"
+        newname = name.split('.rdzip')[0]
+        return f"{newname} ({index})" + ".rdzip"
 
 
 # Download list of files from thing.
@@ -59,15 +61,18 @@ if dlmethod == "position":
 
 if dlmethod == "difference":
     # Use data.txt to keep track of levels downloaded
+    # Put urls of levels into urls list
     for level in stuff:
         urls.append(level['download_url'])
 
+    # Read data.txt, compare to urls
     with open('data.txt', 'r') as data:
         urls_dl = data.read().splitlines()
         urls = set(urls).difference(urls_dl)
 
     print("Levels to download: " + str(len(urls)) + "\nDownloading...\n")
 
+# Save downloaded levels into data.txt
 with open('data.txt', 'a') as data:
     for url in urls:
         data.write(url + "\n")
@@ -76,7 +81,7 @@ with open('data.txt', 'a') as data:
 def download(url):
     # Set name of level to id if Drive, else set to discord link name.
     if url.startswith('https://drive.google.com/'):
-        name = url.split('id=')[-1]
+        name = url.split('id=')[-1] + ".rdzip"
     else:
         name = url.split('/')[-1]
 
@@ -88,18 +93,15 @@ def download(url):
             print(f"Skipping {name}")
             return
 
-    print(f"Downloading {name}")
-    print("\n")
-
     # Download and save zipped level in preZip.
     dwn = requests.get(url, stream=True)
     with open(f'{levelpath}/{name}', 'wb') as f:
         f.write(dwn.content)
-    return url
+    return name
 
 
 results = ThreadPool(threads).imap_unordered(download, urls)
-for r in results:
-    print(r)
+for chunk in progress.bar(results, expected_size=len(urls)):
+    print(f"Done downloading {chunk}" + ' '*30)
 
 print("Done!")
