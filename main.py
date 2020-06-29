@@ -23,8 +23,9 @@ if not (dlmethod == "position" or dlmethod == "difference"):
     raise ValueError("Invalid argument for DownloadMethod in config.ini")
 
 threads = int(config.get('MAIN', 'ThreadNo'))
-if (threads <= 0):
+if threads <= 0:
     raise ValueError("Invalid argument for ThreadNo in config.ini")
+
 
 # Create function to handle renaming.
 def rename(name, index):
@@ -52,7 +53,7 @@ if dlmethod == "position":
     else:
         print("Looping through " + str(end - start) + " levels.")
     print("\n")
-    
+
     for level in stuff[start:end]:
         urls.append(level['download_url'])
 
@@ -60,16 +61,17 @@ if dlmethod == "difference":
     # Use data.txt to keep track of levels downloaded
     for level in stuff:
         urls.append(level['download_url'])
-    
+
     with open('data.txt', 'r') as data:
         urls_dl = data.read().splitlines()
         urls = set(urls).difference(urls_dl)
-        
+
     print("Levels to download: " + str(len(urls)) + "\nDownloading...\n")
 
 with open('data.txt', 'a') as data:
     for url in urls:
         data.write(url + "\n")
+
 
 def download(url):
     # Set name of level to id if Drive, else set to discord link name.
@@ -94,6 +96,7 @@ def download(url):
     with open(f'{levelpath}/{name}', 'wb') as f:
         f.write(dwn.content)
     return url
+
 
 results = ThreadPool(threads).imap_unordered(download, urls)
 for r in results:
