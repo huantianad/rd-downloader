@@ -18,6 +18,13 @@ samename = config.get('MAIN', 'OnSameName')
 if not (samename == "overwrite" or samename == "rename" or samename == "skip"):
     raise ValueError("Invalid argument for OnSameName in config.ini")
 
+dlmethod = config.get('MAIN', 'DownloadMethod')
+if not (dlmethod == "position" or dlmethod == "difference"):
+    raise ValueError("Invalid argument for DownloadMethod in config.ini")
+
+threads = int(config.get('MAIN', 'ThreadNo'))
+if (threads <= 0):
+    raise ValueError("Invalid argument for ThreadNo in config.ini")
 
 # Create function to handle renaming.
 def rename(name, index):
@@ -31,24 +38,38 @@ def rename(name, index):
 thing = requests.get(
     'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec').content
 stuff = json.loads(thing.decode('utf-8'))
-
-# Prompt user for start and stop of levels to download
-print("Total number of levels: " + str(len(stuff)) + "\n")
-start = int(input("Level to start at (index starts at 0): "))
-end = int(input("Level to end at (non-inclusive): "))
-
-if end - start == 1:
-    print("Looping through 1 level.")
-else:
-    print("Looping through " + str(end - start) + " levels.")
-print("\n")
-
-
 urls = []
 
-for level in stuff[start:end]:
-    urls.append(level['download_url'])
+print("Total number of levels: " + str(len(stuff)) + "\n")
 
+if dlmethod == "position":
+    # Prompt user for start and stop of levels to download
+    start = int(input("Level to start at (index starts at 0): "))
+    end = int(input("Level to end at (non-inclusive): "))
+
+    if end - start == 1:
+        print("Looping through 1 level.")
+    else:
+        print("Looping through " + str(end - start) + " levels.")
+    print("\n")
+    
+    for level in stuff[start:end]:
+        urls.append(level['download_url'])
+
+if dlmethod == "difference":
+    # Use data.txt to keep track of levels downloaded
+    for level in stuff:
+        urls.append(level['download_url'])
+    
+    with open('data.txt', 'r') as data:
+        urls_dl = data.read().splitlines()
+        urls = set(urls).difference(urls_dl)
+        
+    print("Levels to download: " + str(len(urls)) + "\nDownloading...\n")
+
+with open('data.txt', 'a') as data:
+    for url in urls:
+        data.write(url + "\n")
 
 def download(url):
     # Set name of level to id if Drive, else set to discord link name.
@@ -74,9 +95,8 @@ def download(url):
         f.write(dwn.content)
     return url
 
-
-# The amount of simultaneous downloads. Increasing will increase speed, but will be capped by your network speed.
-threads = 8
 results = ThreadPool(threads).imap_unordered(download, urls)
 for r in results:
     print(r)
+
+print("Done!")
