@@ -6,6 +6,7 @@ from multiprocessing.pool import ThreadPool
 import requests
 from clint.textui import progress
 
+
 # Config stuff
 config = configparser.ConfigParser()
 config.read('config.ini')
@@ -44,6 +45,7 @@ stuff = json.loads(thing.decode('utf-8'))
 urls = []
 
 print("Total number of levels: " + str(len(stuff)) + "\n")
+
 
 if dlmethod == "position":
     # Prompt user for start and stop of levels to download
