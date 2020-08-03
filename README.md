@@ -7,3 +7,4 @@ The required packages are requests and clint, if you want to manually install th
 
 # Usage
 Run main.py and input your desired level start and stop (if using default downloading method). 
+The script automatically uses the path `C:\Users\USERNAME\Documents\Rhythm Doctor\Levels` as the download directory. If this path is not valid on your ocmputer, you can change it in config.ini
