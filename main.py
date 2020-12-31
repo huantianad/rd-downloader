@@ -78,7 +78,7 @@ def main():
 
     results = ThreadPool(8).imap_unordered(download, site_urls)
     for chunk in progress.bar(results, expected_size=len(site_urls)):
-        pr_green(f"Downloaded {chunk}" + ' ' * 30)
+        pr_green(f"Downloaded {chunk}".ljust(55))
 
     input("Done downloading! Press Enter to continue...")
 
