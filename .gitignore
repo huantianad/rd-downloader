@@ -2,4 +2,4 @@ build/
 dist/
 downloader/
 .idea/
-main.spec
+SimpleDownload.exe.spec
