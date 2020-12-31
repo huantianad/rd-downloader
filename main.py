@@ -25,9 +25,7 @@ def rename(name, index):
 
 
 def download(url):
-    if url.startswith('https://drive.google.com/'):
-        name = url.split('id=')[-1] + ".rdzip"
-    elif url.startswith("https://www.dropbox.com/s/"):
+    if url.startswith('https://drive.google.com/') or url.startswith("https://www.dropbox.com/s/"):
         r = requests.get(url)
         name = re.findall('filename=(.+)', r.headers.get('Content-Disposition'))[0].split(";")[0].replace('"', "")
     else:
