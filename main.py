@@ -1,5 +1,5 @@
-import json
 import os
+import re
 from multiprocessing.pool import ThreadPool
 
 import requests
@@ -26,6 +26,9 @@ def rename(name, index):
 def download(url):
     if url.startswith('https://drive.google.com/'):
         name = url.split('id=')[-1] + ".rdzip"
+    elif url.startswith("https://www.dropbox.com/s/"):
+        r = requests.get(url)
+        name = re.findall('filename=(.+)', r.headers.get('Content-Disposition'))[0].split(";")[0].replace('"', "")
     else:
         name = url.split('/')[-1]
 
@@ -40,6 +43,13 @@ def download(url):
     return name
 
 
+def check_verified(level):
+    try:
+        return level['verified']
+    except KeyError:
+        return False
+
+
 def main():
     if not os.path.exists(f'{levelpath}/'):
         os.mkdir(f'{levelpath}/')
@@ -47,8 +57,9 @@ def main():
 
     prCyan("Accessing website.")
     url = 'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec'
-    site_data = json.loads(requests.get(url).content)
+    site_data = requests.get(url).json()
     site_urls = [x['download_url'] for x in site_data]
+    # site_urls = [x['download_url'] for x in site_data if check_verified(x)]
 
     prCyan(f"Total levels found: {len(site_urls)}\n")
 
