@@ -12,3 +12,11 @@ Simple Bulk Downloader for the RD Levels Site. Allows you to download all levels
 
 Note: if you have the preorder, you can import multiple levels at the same time.
 If you do not have the preorder, you can use [7-zip](https://www.7-zip.org/) to unzip multiple rdzips at the same time.
+
+## Run From Source
+If you don't want to use the exe file to run the program, you can also just run the python file.
+1. Get yourself [python](https://www.python.org/downloads/).
+2. Clone the repository.
+3. Install the dependencies with `pip install -r requirements.txt`
+4. Run the python file (`python main.py`)
+5. Profit.
