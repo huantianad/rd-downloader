@@ -1,3 +1,4 @@
+# This has been deprecated and replaced by [SimpleDownload](https://github.com/huantianad/SimpleDownload). Please use that if you just want to download all levels.
 # RDDownloader
 Downloads and unzips RD levels from https://auburnsummer.github.io/rdlevels/.
 
