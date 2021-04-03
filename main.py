@@ -102,7 +102,7 @@ def main():
     with alive_bar(len(site_urls), spinner='notes_scrolling') as bar:
         for result in results:
             if is_windows:
-                print(f"Downloaded {result.ljust(55)}")
+                print(f"Downloaded {result.ljust(76)}")
             else:
                 cprint(f"Downloaded {result}", 'green')
             bar()
