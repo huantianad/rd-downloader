@@ -11,8 +11,9 @@ from termcolor import cprint
 level_path = "downloader"
 
 
-# Print color definitions
+# windows is dumb, color fixes
 init()
+is_windows = os.name == 'nt'
 
 
 def rename(path: str):
@@ -58,8 +59,12 @@ def download_level(url: str):
             for chunk in r:
                 file.write(chunk)
     else:
-        cprint(f'''ERROR: Status code not 200 when downloading {full_path}, maybe the level was deleted on discord?
-               Please tell a mod about this. level url: {url}''', 'red')
+        if is_windows:
+            print(f'''ERROR: Status code not 200 when downloading {full_path}, maybe the level was deleted on discord?
+                   Please tell a mod about this. level url: {url}''')
+        else:
+            cprint(f'''ERROR: Status code not 200 when downloading {full_path}, maybe the level was deleted on discord?
+                   Please tell a mod about this. level url: {url}''', 'red')
 
     return full_path  # Returns the final path to the downloaded level
 
@@ -96,7 +101,10 @@ def main():
     results = ThreadPool(8).imap_unordered(download_level, site_urls)
     with alive_bar(len(site_urls), spinner='notes_scrolling') as bar:
         for result in results:
-            cprint(f"Downloaded {result}", 'green')
+            if is_windows:
+                print(f"Downloaded {result.ljust(55)}")
+            else:
+                cprint(f"Downloaded {result}", 'green')
             bar()
 
     input("Done downloading! Press Enter to continue...")
