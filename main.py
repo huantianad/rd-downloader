@@ -16,6 +16,7 @@ init()
 is_windows = os.name == 'nt'
 
 
+
 def rename(path: str):
     if os.path.exists(path):
         index = 1
@@ -98,8 +99,12 @@ def main():
 
     cprint(f"Total levels found: {len(site_urls)}\n", 'cyan')
 
+    # use different settings for the progress bar as windows doesn't have the right fonts
+    bar = 'classic2' if is_windows else 'smooth'
+    spinner = 'classic' if is_windows else 'notes_scrolling'
+    
     results = ThreadPool(8).imap_unordered(download_level, site_urls)
-    with alive_bar(len(site_urls), spinner='notes_scrolling') as bar:
+    with alive_bar(len(site_urls), bar=bar, spinner=spinner) as bar:
         for result in results:
             if is_windows:
                 print(f"Downloaded {result.ljust(76)}")
