@@ -3,3 +3,4 @@ dist/
 downloader/
 .idea/
 SimpleDownload.exe.spec
+.python-version
