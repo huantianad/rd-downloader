@@ -4,16 +4,15 @@ from multiprocessing.pool import ThreadPool
 
 from alive_progress import alive_bar
 import requests
+from colorama import init
+from termcolor import cprint
 
 
 level_path = "downloader"
 
 
 # Print color definitions
-def pr_green(skk): print(f"\033[32m{skk}\033[00m")
-def pr_cyan(skk): print(f"\033[36m{skk}\033[00m")
-def pr_orange(skk): print(f"\033[33m{skk}\033[00m")
-def pr_red(skk): print(f"\033[31m{skk}\033[00m")
+init()
 
 
 def rename(path: str):
@@ -59,8 +58,8 @@ def download_level(url: str):
             for chunk in r:
                 file.write(chunk)
     else:
-        pr_red(f'''ERROR: Status code not 200 when downloading {full_path}, maybe the level was deleted on discord?
-               Please tell a mod about this. level url: {url}''')
+        cprint(f'''ERROR: Status code not 200 when downloading {full_path}, maybe the level was deleted on discord?
+               Please tell a mod about this. level url: {url}''', 'red')
 
     return full_path  # Returns the final path to the downloaded level
 
@@ -68,36 +67,36 @@ def download_level(url: str):
 def main():
     if not os.path.exists(f'{level_path}/'):
         os.mkdir(f'{level_path}/')
-        pr_green(f'Created folder {level_path}, saving levels there.')
+        cprint(f'Created folder {level_path}, saving levels there.', 'green')
     else:
-        pr_red(f'ERROR: folder "{level_path}" already exists! Please remove and try again.')
+        cprint(f'ERROR: folder "{level_path}" already exists! Please remove and try again.', 'red')
         return
 
-    pr_cyan("Accessing website...")
+    cprint("Accessing website...", 'cyan')
     url = 'https://script.google.com/macros/s/AKfycbzm3I9ENulE7uOmze53cyDuj7Igi7fmGiQ6w045fCRxs_sK3D4/exec'
     site_data = requests.get(url).json()
-    pr_green("Success!")
+    cprint("Success!", 'green')
 
     # Prompt user for what levels to download
     while True:
         ask_checked = input("Would you like to download (a)ll or (c)hecked levels? ")
         if ask_checked.lower() in ['a', 'all']:
             site_urls = [x['download_url'] for x in site_data]
-            pr_cyan("Downloading all levels...")
+            cprint("Downloading all levels...", 'cyan')
             break
         elif ask_checked.lower() in ['c', 'checked']:
             site_urls = [x['download_url'] for x in site_data if x.get('verified')]
-            pr_cyan("Downloading checked levels...")
+            cprint("Downloading checked levels...", 'cyan')
             break
         else:
-            pr_red(f'ERROR: "{ask_checked}" is not a valid option.')
+            cprint(f'ERROR: "{ask_checked}" is not a valid option.', 'red')
 
-    pr_cyan(f"Total levels found: {len(site_urls)}\n")
+    cprint(f"Total levels found: {len(site_urls)}\n", 'cyan')
 
     results = ThreadPool(8).imap_unordered(download_level, site_urls)
     with alive_bar(len(site_urls), spinner='notes_scrolling') as bar:
         for result in results:
-            pr_green(f"Downloaded {result}")
+            cprint(f"Downloaded {result}", 'green')
             bar()
 
     input("Done downloading! Press Enter to continue...")
