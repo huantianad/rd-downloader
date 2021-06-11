@@ -5,7 +5,7 @@ Simple Bulk Downloader for the RD Levels Site. Allows you to download all levels
 ## Usage
 1. Download the latest release [here](https://github.com/huantianad/SimpleDownload/releases/).
 2. Run the file.
-3. The program will prompt you to choose between all and checked levels. Type "all" or "checked" (or "a" and "c") to choose.
+3. Follow the promts.
 4. The program will create a new sub-folder ("downloader") and download all the levels there.
    (It might seem like the program is stuck on the last level, it's probably just a big file.)
 5. Profit.
@@ -19,4 +19,5 @@ If you don't want to use the exe file to run the program, you can also just run 
 2. Clone the repository.
 3. Install the dependencies with `pip install -r requirements.txt`
 4. Run the python file (`python main.py`)
-5. Profit.
+5. Follow the prompts.
+6. Profit.
