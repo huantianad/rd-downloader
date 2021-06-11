@@ -114,8 +114,12 @@ def main():
 
     cprint(f"Total levels found: {len(site_urls)}\n", 'cyan')
 
+    # use different settings for the progress bar as windows doesn't have the right fonts
+    bar = 'classic2' if IS_WINDOWS else 'smooth'
+    spinner = 'classic' if IS_WINDOWS else 'notes_scrolling'
+
     results = ThreadPool(threads).imap_unordered(download_level, site_urls)
-    with alive_bar(len(site_urls), spinner='notes_scrolling') as bar:
+    with alive_bar(len(site_urls), bar=bar, spinner=spinner) as bar:
         for result in results:
             if IS_WINDOWS:
                 print(f"Downloaded {result.ljust(76)}")

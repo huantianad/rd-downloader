@@ -2,6 +2,9 @@ build/
 dist/
 downloader/
 .idea/
+__pycache__/
+env/
 SimpleDownload.exe.spec
 .python-version
 .vscode/
+SimpleDownload-win10.spec
