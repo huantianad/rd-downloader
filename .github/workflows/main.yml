@@ -27,8 +27,7 @@ jobs:
       - name: "test"
         run: |
           pip install -r requirements.txt
-          pip install py2exe
-          python setup.py py2exe
+          pyinstaller SimpleDownload-win10.spec
 
       # Create a draft release with the exe
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -39,11 +38,11 @@ jobs:
           draft: true
           prerelease: false
           files: |
-            ./dist/windows/SimpleDownload-win10.exe
+            ./dist/SimpleDownload-win10.exe
 
       # Create and upload an artifact for testing purposes
       - uses: actions/upload-artifact@v2
         with:
           name: SimpleDownload-win10
-          path: ./dist/main.exe
+          path: ./dist/SimpleDownload-win10.exe
 
