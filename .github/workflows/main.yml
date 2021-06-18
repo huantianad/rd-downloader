@@ -34,11 +34,11 @@ jobs:
           draft: true
           prerelease: false
           files: |
-            ./SimpleDownload-win10.exe
+            ./dist/windows/SimpleDownload-win10.exe
 
       # Create and upload an artifact for testing purposes
       - uses: actions/upload-artifact@v2
         with:
           name: SimpleDownload-win10
-          path: ./SimpleDownload-win10.exe
+          path: ./dist/windows/SimpleDownload-win10.exe
 
