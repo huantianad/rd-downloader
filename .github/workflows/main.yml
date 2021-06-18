@@ -16,21 +16,20 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-
-      # Use PyInstaller to freeze the program
-      # - name: PyInstaller Windows
-      #   uses: JackMcKew/pyinstaller-action-windows@main
-      #   with:
-      #     path: ./
-      #     requirements: ./requirements.txt
-      #     spec: ./SimpleDownload-win10.spec
-      - name: "test"
+      
+      - name: "Setup Python"
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.x'
+          
+      - name: "Install packages, run PyInstaller"
         run: |
           pip install -r requirements.txt
           pyinstaller SimpleDownload-win10.spec
 
       # Create a draft release with the exe
-      - uses: "marvinpinto/action-automatic-releases@v1.2.1"
+      - name: "Create release"
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "<tofill>"
@@ -41,7 +40,8 @@ jobs:
             ./dist/SimpleDownload-win10.exe
 
       # Create and upload an artifact for testing purposes
-      - uses: actions/upload-artifact@v2
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v2
         with:
           name: SimpleDownload-win10
           path: ./dist/SimpleDownload-win10.exe
