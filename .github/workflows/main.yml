@@ -18,12 +18,17 @@ jobs:
       - uses: actions/checkout@v2
 
       # Use PyInstaller to freeze the program
-      - name: PyInstaller Windows
-        uses: JackMcKew/pyinstaller-action-windows@main
-        with:
-          path: ./
-          requirements: ./requirements.txt
-          spec: ./SimpleDownload-win10.spec
+      # - name: PyInstaller Windows
+      #   uses: JackMcKew/pyinstaller-action-windows@main
+      #   with:
+      #     path: ./
+      #     requirements: ./requirements.txt
+      #     spec: ./SimpleDownload-win10.spec
+      - name: "test"
+        run: |
+          pip install -r requirements.txt
+          pip install py2exe
+          python setup.py py2exe
 
       # Create a draft release with the exe
       - uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -40,5 +45,5 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: SimpleDownload-win10
-          path: ./dist/windows/SimpleDownload-win10.exe
+          path: ./dist/main.exe
 
