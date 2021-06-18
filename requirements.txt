@@ -1,11 +1,11 @@
 alive-progress==1.6.2
 altgraph==0.17
-certifi==2020.12.5
+certifi==2021.5.30
 chardet==4.0.0
 colorama==0.4.4
 idna==2.10
-pyinstaller==4.2
+pyinstaller==4.3
 pyinstaller-hooks-contrib==2021.1
 requests==2.25.1
 termcolor==1.1.0
-urllib3==1.26.4
+urllib3==1.26.5
