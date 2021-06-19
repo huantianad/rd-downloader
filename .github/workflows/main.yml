@@ -1,0 +1,48 @@
+name: PyInstaller Windows Release
+
+# Controls when the action will run.
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: "Setup Python"
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9.x'
+          
+      - name: "Install packages, run PyInstaller"
+        run: |
+          pip install -r requirements.txt
+          pyinstaller SimpleDownload-win10.spec
+
+      # Create a draft release with the exe
+      - name: "Create release"
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "<tofill>"
+          title: "<tofill>"
+          draft: true
+          prerelease: false
+          files: |
+            ./dist/SimpleDownload-win10.exe
+
+      # Create and upload an artifact for testing purposes
+      - name: "Upload artifact"
+        uses: actions/upload-artifact@v2
+        with:
+          name: SimpleDownload-win10
+          path: ./dist/SimpleDownload-win10.exe
+
