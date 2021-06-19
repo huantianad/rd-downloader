@@ -36,18 +36,19 @@ def get_url_filename(url: str) -> tuple[str, requests.Response]:
     for char in r'<>:"/\|?*':
         name = name.replace(char, '')
 
-    return name, r
+    return name
 
 
 def download_level(url: str):
     # Get the proper filename of the level, append it to the path to get the full path to the downloaded level.
-    filename, r = get_url_filename(url)
+    filename = get_url_filename(url)
     full_path = os.path.join(DOWNLOAD_PATH, filename)
 
     # Get a unique file name
     full_path = rename(full_path)
 
     # Download the level
+    r = requests.get(url, stream=True)
     if r.status_code == 200:
         with open(full_path, 'wb') as file:
             for chunk in r:
