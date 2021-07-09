@@ -1,0 +1,9 @@
+build/
+dist/
+downloader/
+.idea/
+__pycache__/
+env/
+.python-version
+.vscode/
+.directory
