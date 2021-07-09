@@ -16,16 +16,16 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
+
       - name: "Setup Python"
         uses: actions/setup-python@v2
         with:
           python-version: '3.9.x'
-          
+
       - name: "Install packages, run PyInstaller"
         run: |
           pip install -r requirements.txt
-          pyinstaller SimpleDownload-win10.spec
+          pyinstaller rd-downloader.spec
 
       # Create a draft release with the exe
       - name: "Create release"
