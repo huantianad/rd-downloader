@@ -37,12 +37,12 @@ jobs:
           draft: true
           prerelease: false
           files: |
-            ./dist/SimpleDownload-win10.exe
+            ./dist/rd-downloader.exe
 
       # Create and upload an artifact for testing purposes
       - name: "Upload artifact"
         uses: actions/upload-artifact@v2
         with:
-          name: SimpleDownload-win10
-          path: ./dist/SimpleDownload-win10.exe
+          name: rd-downloader
+          path: ./dist/rd-downloader.exe
 
