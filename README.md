@@ -1,6 +1,7 @@
-# SimpleDownload
-Simple Bulk Downloader for the RD Levels Site. Allows you to download all levels or all checked levels from the 
-[custom levels site](https://auburnsummer.github.io/rdlevels/).
+# rd-downloader
+Simple Bulk Downloader for the RD Levels Site. Allows you to download all levels or all checked levels from the [custom levels site](https://auburnsummer.github.io/rdlevels/).
+
+This project was over at [SimpleDownload](https://github.com/huantianad/SimpleDownload) for a bit, but I've moved it back here becuase this name makes more sense to be honest.
 
 ## Usage
 1. Download the latest release [here](https://github.com/huantianad/SimpleDownload/releases/).
