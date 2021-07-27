@@ -22,7 +22,7 @@ def rename(path: str) -> str:
         return path
 
 
-def get_url_filename(url: str) -> tuple[str, requests.Response]:
+def get_url_filename(url: str) -> str:
     if url.endswith('.rdzip'):
         # When the filename already ends with the file extension, we can just snatch it from the url
         name = url.split('/')[-1]
@@ -30,7 +30,7 @@ def get_url_filename(url: str) -> tuple[str, requests.Response]:
         # Otherwise, we need to use some weird stuff to get it from the Content-Disposition header
         r = requests.get(url, allow_redirects=True, stream=True)
         h = r.headers.get('Content-Disposition')
-        name = re.findall('filename="(.+)"', h)[0]
+        name = re.findall(r'filename="(.+)"', h)[0]
 
     # Remove the characters that windows doesn't like in filenames
     for char in r'<>:"/\|?*':
