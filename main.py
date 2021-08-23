@@ -1,4 +1,5 @@
 import os
+import traceback
 from multiprocessing.pool import ThreadPool
 from pathlib import Path
 from typing import Any
@@ -12,26 +13,27 @@ from colorama import Fore, Style, init
 def make_download_folder(path: Path) -> None:
     if path.exists():
         print(Fore.YELLOW + Style.BRIGHT + f'Warning: folder "{path.absolute()}" already exists!')
-        return
-
-    path.mkdir()
-    print(Fore.GREEN + Style.BRIGHT + f'Created folder "{path.absolute()}", saving levels there.')
+    else:
+        path.mkdir()
+        print(Fore.GREEN + Style.BRIGHT + f'Created folder "{path.absolute()}", saving levels there.')
 
 
 def prompt_users() -> dict[str, Any]:
-    output = {}
+    output = {'threads': 8, 'verified_only': True}
 
     # TODO: Prompt for download path
 
     # Prompt user for what levels to download
     while True:
-        ask_checked = input("Would you like to download checked levels only? (Y/n) ").lower()
+        ask_checked = input("Would you like to download checked levels only? (Y/n) ").lower().strip()
 
-        if ask_checked in ['n', 'no']:
+        if ask_checked in {'n', 'no'}:
             output['verified_only'] = False
             break
-        elif ask_checked in ['y', 'yes', '']:
+        elif ask_checked in {'y', 'yes'}:
             output['verified_only'] = True
+            break
+        elif not ask_checked:  # No input given -> use default value
             break
         else:
             print(Fore.RED + f'ERROR: "{ask_checked}" is not a valid option.')
@@ -40,14 +42,13 @@ def prompt_users() -> dict[str, Any]:
     while True:
         threads = input("How many download threads would you like to use? (Default: 8) ")
 
-        if not threads:
-            output['threads'] = 8
+        if not threads:  # No input given -> use default value
             break
 
         try:
-            output['threads'] = int(threads)
-            if output['threads'] < 1:
+            if int(threads) < 1:
                 raise ValueError
+            output['threads'] = int(threads)
         except ValueError:
             print(Fore.RED + f'ERROR: "{threads}" is not a positive integer.')
         else:
@@ -61,6 +62,7 @@ def get_site_urls(verified_only: bool) -> list[str]:
 
     with httpx.Client() as client:
         site_data = pyvitals.get_sheet_data(client, verified_only=verified_only)
+
     site_urls = [level['download_url'] for level in site_data]
 
     print(Fore.GREEN + f"Success! Total levels found: {len(site_urls)}\n")
@@ -81,7 +83,10 @@ def main_download(path: Path, urls: list[str], threads: int) -> None:
             try:
                 result = pyvitals.download_level(client, url, path)
             except (pyvitals.BadRDZipFile, pyvitals.BadURLFilename):
-                print(f"{url} failed to download correctly. Please contact a mod about this.")
+                print(f"{url} failed to download correctly. Please tell me about this.")
+            except Exception:
+                traceback.print_exc()
+                print(f"{url} failed to download with a unknown error. Please tell me about this.")
             else:
                 if IS_WINDOWS:
                     print(f"Downloaded {result.name:<80}")
