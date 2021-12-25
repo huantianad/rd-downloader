@@ -10,7 +10,7 @@ This project was over at [SimpleDownload](https://github.com/huantianad/SimpleDo
    - Configurable thread count
 
 ## Usage
-1. Download and run the latest release [here](https://github.com/huantianad/SimpleDownload/releases/).
+1. Download and run the latest release [here](https://github.com/huantianad/rd-downloader/releases/).
 2. Follow the prompts. If you don't know how many download threads to use, just use the default.
 3. The program will create a new sub-folder ("downloader") and download all the levels there.
    (It might seem like the program is stuck on the last level, it's probably just a big file.)
