@@ -1,9 +1,7 @@
-build/
-dist/
-downloader/
-.idea/
-__pycache__/
-env/
-.python-version
+# Dev environment stuff
 .vscode/
+debug/
 .directory
+
+# Program created stuff
+rd_downloader/
