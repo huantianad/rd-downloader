@@ -2,8 +2,8 @@ name: Check
 
 on:
   push:
-    tags:
-      - '!v*'
+    tags-ignore:
+      - 'v*'
   pull_request:
 
 env:
