@@ -1,6 +1,10 @@
 name: Check
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - '!v*'
+  pull_request:
 
 env:
   NIM_VERSION: '1.6.4'
