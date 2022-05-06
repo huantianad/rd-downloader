@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 env:
-  APP_NAME: 'rd-downloader'
+  APP_NAME: 'rd_downloader'
   NIM_VERSION: '1.6.4'
 
 jobs:
