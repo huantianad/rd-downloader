@@ -31,6 +31,8 @@ jobs:
             cacert.pem
             libcrypto-1_1.dll
             libcrypto-1_1-x64.dll
+            sqlite3_32.dll
+            sqlite3_64.dll
             libssl-1_1.dll
             libssl-1_1-x64.dll
 
