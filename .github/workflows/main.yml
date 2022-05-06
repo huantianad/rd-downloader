@@ -97,7 +97,10 @@ jobs:
           myToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Write changelog to file
-        run: echo '${{ steps.changelog.outputs.changelog }}' > changelog.txt
+        run: |
+          cat > changelog.txt << "EOF"
+          ${{ steps.changelog.outputs.changelog }}
+          EOF
 
       - name: Store changelog
         uses: actions/upload-artifact@v2
