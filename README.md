@@ -12,12 +12,11 @@ This project was over at [SimpleDownload](https://github.com/huantianad/SimpleDo
 ## Usage
 1. Download and run the latest release [here](https://github.com/huantianad/rd-downloader/releases/).
 2. Follow the prompts. If you don't know how many download threads to use, just use the default.
-3. The program will create a new sub-folder ("downloads") and download all the levels there.
-   (It might seem like the program is stuck on the last level, it's probably just a big file.)
+3. The program will create a new sub-folder called `downloads` and download all the levels there. (It might seem like the program is stuck on the last level, it's probably just a big file.)
 4. Profit.
 
-Note: if you have the preorder, you can select import multiple levels at the same time.
-If you do not have the preorder, you can use [7-zip](https://www.7-zip.org/) to unzip multiple rdzips at the same time.
+Note: if you have the full game, you can select multiple levels when importing to import many at the same time.
+If you do not have the full game, you can use [7-zip](https://www.7-zip.org/) to unzip multiple rdzips at the same time.
 
 ## Run From Source
 If you don't want to use the exe file to run the program, you can also run the program via python directly.
