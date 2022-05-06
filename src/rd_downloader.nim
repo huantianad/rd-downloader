@@ -1,13 +1,15 @@
 import std/[asyncdispatch, strformat]
 import setup, sheet, download
 
+
 proc main() {.async.} =
   let downloadFolder = getDownloadFolder()
+  echo ""
   let (verifiedOnly, threads) = askUserPrefs()
 
   echo ""
   echo "Getting levels list."
-  let urls = await getSheetUrls(verifiedOnly)
+  let urls = getSiteUrls(verifiedOnly)
   echo fmt"Found {urls.len} levels."
   echo ""
 
