@@ -1,4 +1,4 @@
-version     = "2.0.0"
+version     = "2.1.2"
 author      = "huantian"
 description = "Simple Bulk Downloader for the Rhythm Doctor custom levels site."
 license     = "MIT"
