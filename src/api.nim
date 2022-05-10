@@ -12,7 +12,7 @@ import std/[
 proc open(connection: string): DbConn =
   open(connection, "", "", "")
 
-proc getSiteUrls(client: HttpClient, verifiedOnly: bool): seq[Uri] {.gcsafe.} =
+proc getLevelUrls(client: HttpClient, verifiedOnly: bool): seq[Uri] {.gcsafe.} =
   let tempDir = createTempDir("rddownloader_", "")
   defer: removeDir(tempDir)
 
@@ -35,16 +35,16 @@ proc getSiteUrls(client: HttpClient, verifiedOnly: bool): seq[Uri] {.gcsafe.} =
       LEFT JOIN status ON status.id = level.id
   """)
 
-  let statement =
+  let query =
     if verifiedOnly:
       sql"SELECT url from levels WHERE approval > 0"
     else:
       sql"SELECT url from levels"
 
-  db.getAllRows(statement).mapIt(it[0].parseUri)
+  db.getAllRows(query).mapIt(it[0].parseUri)
 
-proc getSiteUrls*(verifiedOnly: bool): seq[Uri] {.gcsafe.} =
+proc getLevelUrls*(verifiedOnly: bool): seq[Uri] {.gcsafe.} =
   var client = newHttpClient()
   defer: client.close()
 
-  client.getSiteUrls(verifiedOnly)
+  client.getLevelUrls(verifiedOnly)

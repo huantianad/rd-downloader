@@ -16,7 +16,8 @@ import std/[
 import suru
 
 proc getFilename(url: Uri, resp: AsyncResponse): Option[string] =
-  ## Extracts the filename when downloading a file
+  ## Extracts filename from a url/response headers.
+  ## Either uses last element in url, or Content-Disposition header.
   # Check if filename is already in URL
   let (_, name, ext) = url.path.splitFile
   if ext == ".rdzip" or ext == ".zip":
@@ -32,18 +33,17 @@ proc getFilename(url: Uri, resp: AsyncResponse): Option[string] =
       return some(cdData["filename"])
 
 proc ensureFilename(path: string): string =
-  ## Creates a unique filename for a given path by adding (#)
-  ## to the filename.
+  ## Creates a unique filename for a given path by adding (#) to the filename.
   if not path.fileExists:
     return path
 
   let (directory, name, ext) = path.splitFile
 
   var index = 2
-  while joinPath(directory, fmt"{name} ({index}){ext}").fileExists:
+  while fileExists(directory / fmt"{name} ({index}){ext}"):
     index += 1
 
-  joinPath(directory, fmt"{name} ({index}){ext}")
+  directory / fmt"{name} ({index}){ext}"
 
 
 proc downloadLevel(client: AsyncHttpClient, url: Uri, folder: string) {.async.} =
@@ -59,13 +59,12 @@ proc downloadLevel(client: AsyncHttpClient, url: Uri, folder: string) {.async.} 
       echo fmt"Failed to get filename for url: {url}"
       "UNKNOWN.rdzip"
 
-  let fullPath = joinPath(folder, filename).ensureFilename()
+  let fullPath = ensureFilename(folder / filename)
 
   let asyncFile = fullPath.openAsync(fmWrite)
-  try:
-    await asyncFile.writeFromStream(resp.bodyStream)
-  finally:
-    asyncFile.close()
+  defer: asyncFile.close()
+  await asyncFile.writeFromStream(resp.bodyStream)
+
 
 proc downloadLevelSafe(client: AsyncHttpClient, url: Uri, folder: string) {.async.} =
   ## Downloads a file into the given folder, automatically gets filename
@@ -73,6 +72,7 @@ proc downloadLevelSafe(client: AsyncHttpClient, url: Uri, folder: string) {.asyn
   try:
     await downloadLevel(client, url, folder)
   except:
+    echo fmt"Failed to download '{url}'. Error message:"
     echo getCurrentExceptionMsg()
 
 proc downloadLevels*(urls: seq[Uri], folder: string, threads: Positive = 8): Future[void] =
@@ -105,7 +105,6 @@ proc downloadLevels*(urls: seq[Uri], folder: string, threads: Positive = 8): Fut
 
     var fut = currentClient.downloadLevelSafe(currentUrl, folder)
     fut.addCallback do ():
-      # Do I want to do this bit before the update?
       inc bar
       bar.update()
 

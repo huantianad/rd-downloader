@@ -1,5 +1,5 @@
 import std/[asyncdispatch, strformat]
-import setup, sheet, download
+import api, download, setup
 
 
 proc main() {.async.} =
@@ -9,7 +9,7 @@ proc main() {.async.} =
 
   echo ""
   echo "Getting levels list."
-  let urls = getSiteUrls(verifiedOnly)
+  let urls = getLevelUrls(verifiedOnly)
   echo fmt"Found {urls.len} levels."
   echo ""
 

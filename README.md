@@ -1,5 +1,5 @@
 # rd-downloader
-Simple Bulk Downloader for the [RD custom levels site](https://auburnsummer.github.io/rdlevels/).
+Simple Bulk Downloader for the [RD custom levels site](https://rhythm.cafe/).
 
 This project was over at [SimpleDownload](https://github.com/huantianad/SimpleDownload) for a bit, check there for older releases.
 
