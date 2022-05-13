@@ -1,4 +1,4 @@
--d:ssl
+--define:ssl
 --styleCheck:hint
 --gc:orc
 --panics:on
