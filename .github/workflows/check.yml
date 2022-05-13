@@ -2,9 +2,12 @@ name: Check
 
 on:
   push:
+    branches:
+      - "master"
   pull_request:
 
 env:
+  APP_NAME: 'rd_downloader'
   NIM_VERSION: '1.6.4'
 
 jobs:
@@ -24,3 +27,11 @@ jobs:
 
       - name: Build
         run: nimble build -d:release -y
+
+      - name: Store artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: binary-${{ matrix.os }}
+          path: |
+            ${{ env.APP_NAME }}
+            ${{ env.APP_NAME }}.exe

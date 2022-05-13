@@ -45,7 +45,6 @@ proc ensureFilename(path: string): string =
 
   directory / fmt"{name} ({index}){ext}"
 
-
 proc downloadLevel(client: AsyncHttpClient, url: Uri, folder: string) {.async.} =
   ## Downloads a file into the given folder, automatically gets filename
   ## from the url, and ensures it is unique
