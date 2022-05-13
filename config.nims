@@ -3,5 +3,5 @@
 --gc:orc
 --panics:on
 when defined(windows):
-  -passC: "-static"
-  -passL: "-static"
+  switch("passC", "-static")
+  switch("passL", "-static")
