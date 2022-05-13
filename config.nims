@@ -2,6 +2,6 @@
 --styleCheck:hint
 --gc:orc
 --panics:on
-when defined(Windows):
+when defined(windows):
   -passC: "-static"
   -passL: "-static"
