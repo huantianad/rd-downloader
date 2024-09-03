@@ -66,12 +66,12 @@ jobs:
     needs: [build, dll]
     steps:
       - name: Download Windows artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: binary-windows-latest
 
       - name: Download DLLs artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: dlls
 
@@ -115,17 +115,17 @@ jobs:
     needs: [build, changelog, package-windows]
     steps:
       - name: Download Windows package artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: package-windows-latest
 
       - name: Download Linux binary artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: binary-ubuntu-latest
 
       - name: Download changelog
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: changelog
 
